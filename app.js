@@ -1,37 +1,10 @@
 const express = require("express");
 const app = express();
 
-app.get("/", (req, res) => {
-    res.json({
-        result: "Data",
-        status: true,
-        msg: "Home page"
-    });
-})
+const routes = require("./routes");
 
-app.get("/about", (req, res) => {
-    res.json({
-        result: "About us content",
-        status: true,
-        msg: "About us page"
-    });
-})
-
-app.get("/login", (req, res) => {
-    res.json({
-        result: "Login contents",
-        status: true,
-        msg: "Login page"
-    });
-})
-
-app.get("/register", (req, res) => {
-    res.json({
-        result: "Register contents",
-        status: true,
-        msg: "Register page"
-    });
-})
+// route mount
+app.use(routes);
 
 //Error handeling
 app.use((req, res) => {
