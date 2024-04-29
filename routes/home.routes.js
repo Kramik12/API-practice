@@ -1,7 +1,7 @@
-const express = require("express");
-const app = express();
+const router = require("express").Router();
 
-app.get("/", (req, res) => {
+
+router.get("/", (req, res, next) => {
     res.json({
         result: "Data",
         status: true,
@@ -9,7 +9,7 @@ app.get("/", (req, res) => {
     });
 })
 
-app.get("/product/:id", (req, res) => {
+router.get("/product/:id", (req, res, next) => {
     res.json({
         params: req.params,
         query: req.query,
@@ -17,7 +17,7 @@ app.get("/product/:id", (req, res) => {
     })
 })
 
-app.get("/about", (req, res) => {
+router.get("/about", (req, res, next) => {
     res.json({
         result: "About us content",
         status: true,
@@ -25,4 +25,4 @@ app.get("/about", (req, res) => {
     });
 })
  
-module.exports = app;
+module.exports = router;

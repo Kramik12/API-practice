@@ -1,7 +1,7 @@
 const express = require("express");
-const app = express();
+const router = express.Router();
 
-app.get("/login", (req, res) => {
+router.get("/login", (req, res, next) => {
     res.json({
         result: "Login contents",
         status: true,
@@ -9,7 +9,7 @@ app.get("/login", (req, res) => {
     });
 })
 
-app.get("/register", (req, res) => {
+router.get("/register", (req, res, next) => {
     res.json({
         result: "Register contents",
         status: true,
@@ -18,4 +18,4 @@ app.get("/register", (req, res) => {
 })
 
 //export app
-module.exports = app;
+module.exports = router;

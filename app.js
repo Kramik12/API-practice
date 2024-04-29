@@ -3,11 +3,35 @@ const app = express();
 
 const routes = require("./routes");
 
+//Middleware
+/*
+a. Application Level middleware
+b. Routing Level Middleware
+c. Custom Middleware
+d. Builtin Middleware
+e. Error Handeling Middleware
+f. Thirdparty Middleware
+*/ 
+
+// const getLoggedInuser = (req, res, next) => {
+//     console.log("Here");
+//     next();
+// }
+// app.use(getLoggedInuser);
+
 // route mount
-app.use(routes);
+app.use("/api/v1", routes);
+
+let router = express.Router();
+
+router.get("/contact", (req, res, next) => {
+
+})
+
+app.use(router);
 
 //Error handeling
-app.use((req, res) => {
+app.use((req, res, next) => {
 
     //404
     
