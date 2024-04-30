@@ -1,21 +1,12 @@
 const express = require("express");
 const router = express.Router();
+let AuthController = require("../controllers/auth.controller")
+let auth_ctrl = new AuthController();
 
-router.get("/login", (req, res, next) => {
-    res.json({
-        result: "Login contents",
-        status: true,
-        msg: "Login page"
-    });
-})
+router.post("/login", auth_ctrl.login)
 
-router.get("/register", (req, res, next) => {
-    res.json({
-        result: "Register contents",
-        status: true,
-        msg: "Register page"
-    });
-})
+router.post("/register", auth_ctrl.register)
 
-//export app
+
+//export router
 module.exports = router;

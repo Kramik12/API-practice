@@ -1,8 +1,10 @@
+const { brandList, brandAdd } = require("../controllers/brand.controller");
+
 const router = require("express").Router();
 
 router.route('/')
-.get((req, res, next) => {})
-.post((req, res, next) => {})
+.get(brandList)
+.post(brandAdd)
 
 router.route('/:id')
 .get((req, res, next) => {})

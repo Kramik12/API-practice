@@ -13,13 +13,12 @@ e. Error Handeling Middleware
 f. Thirdparty Middleware
 */ 
 
-// const getLoggedInuser = (req, res, next) => {
-//     console.log("Here");
-//     next();
-// }
-// app.use(getLoggedInuser);
+//convert the incoming json data to request body data
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: false
+}));
 
-// route mount
 app.use("/api/v1", routes);
 
 let router = express.Router();
