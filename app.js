@@ -13,11 +13,22 @@ e. Error Handeling Middleware
 f. Thirdparty Middleware
 */ 
 
+app.use('/assets', express.static(process.cwd()+"/uploads"));
+app.set('view engine', 'pug');
+app.set('views', process.cwd()+"/views");
+
+
+
 //convert the incoming json data to request body data
 app.use(express.json());
 app.use(express.urlencoded({
     extended: false
 }));
+
+app.get("/", (req, res, next) => {
+    let name= "Kramik";
+    res.render('index', {name: name});
+})
 
 app.use("/api/v1", routes);
 
