@@ -22,12 +22,31 @@ class AuthController{
         data.image = req.file.filename;
     }
         // db query
-        MongoClient.connect(dbURL);
-        res.json({
-            result: data,
-            status: true,
-            msg: "Register page"
+        MongoClient.connect(dbURL, (err, client) => {
+            if (err) {
+                next({status: 500, msg: "Error connection"})
+            } else {
+                const db = client.db(dbname);
+                
+                db.collection('users').insertOne(data)
+                .then((ack) => {
+                    res.json({
+                        result: data,
+                        status: true,
+                        msg: "User registered successfully."
+                    })
+
+                })
+                .catch((err) => {
+                    console.error(err);
+                    next({
+                        status: 500,
+                        msg: "Error while regestering user"
+                    })
+                })
+            }
         });
+       
     }
 }
 
