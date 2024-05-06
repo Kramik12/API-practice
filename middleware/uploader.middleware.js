@@ -13,7 +13,7 @@ const myStorage = multer.diskStorage({
 
 const uploader = multer({
     storage: myStorage,
-    limits: 5*1024*1024,
+    limits: 5*1024*1024, // not mandatory
     fileFilter: (req, file, cb) => {
         let ext_parts = file.originalname.split(".");
         let ext = ext_parts.pop();

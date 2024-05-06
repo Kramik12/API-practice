@@ -1,7 +1,11 @@
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
+const dbURL = "mongodb://localhost:27017";
+const dbname = "Backend_practice";
 class AuthController{
     login = (req, res, next) => {
         let data = req.body;
-
+        //db query
         res.json({
             result: data,
             status: true,
@@ -17,7 +21,8 @@ class AuthController{
     if(req.file){
         data.image = req.file.filename;
     }
-
+        // db query
+        MongoClient.connect(dbURL);
         res.json({
             result: data,
             status: true,
