@@ -5,12 +5,39 @@ const dbname = "Backend_practice";
 class AuthController{
     login = (req, res, next) => {
         let data = req.body;
-        //db query
-        res.json({
-            result: data,
-            status: true,
-            msg: "Login page"
-        })
+        MongoClient.connect(dbURL, (err, client) => {
+            if(err){
+                next({status: 500, msg: "Error while db connection"});
+            } else {
+                const db = client.db(dbname);
+
+                db.collection('users').find({
+                    email: data.email,
+                    password: data.password
+                })
+                .toArray()
+                .then((users) => {
+                    if(users) {
+                    res.json({
+                        result: users,
+                        status: true,
+                        msg: "You are successfully logged in"
+                    })
+                } else {
+                    res.json({
+                        result: null,
+                        status: false,
+                        msg: "User not found"
+                    })
+                }
+
+                })
+                .catch((err) => {
+                    console.error(err);
+                    next({status: 500, msg: "Error while db query"})
+                })
+            }
+        });
     }
    register = (req, res, next) => {
     
