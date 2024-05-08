@@ -1,80 +1,82 @@
-const mongodb = require("mongodb");
-const MongoClient = mongodb.MongoClient;
-const dbURL = "mongodb://localhost:27017";
-const dbname = "Backend_practice";
-class AuthController{
+
+const { response } = require("express");
+const { addRecord, getRecord } = require("../services/mongodb.service");
+const { MongoClient, ObjectId } = require("mongodb");
+
+class AuthController {
     login = (req, res, next) => {
         let data = req.body;
-        MongoClient.connect(dbURL, (err, client) => {
-            if(err){
-                next({status: 500, msg: "Error while db connection"});
+        try {
+            let result = getRecord('users', {
+                email: data.email,
+                password: data.password
+            });
+            if (result && result.length) {
+                res.json({
+                    result: result,
+                    status: true,
+                    msg: "You are successfully logged in"
+                })
             } else {
-                const db = client.db(dbname);
-
-                db.collection('users').find({
-                    email: data.email,
-                    password: data.password
-                })
-                .toArray()
-                .then((users) => {
-                    if(users) {
-                    res.json({
-                        result: users,
-                        status: true,
-                        msg: "You are successfully logged in"
-                    })
-                } else {
-                    res.json({
-                        result: null,
-                        status: false,
-                        msg: "User not found"
-                    })
-                }
-
-                })
-                .catch((err) => {
-                    console.error(err);
-                    next({status: 500, msg: "Error while db query"})
+                res.json({
+                    result: null,
+                    status: false,
+                    msg: "User not found"
                 })
             }
-        });
-    }
-   register = (req, res, next) => {
-    
-    //if single file upload, req.file
-    //multiple file upload, req.files
+        } catch(error) {
+            next(error);
+        }
 
-    let data = req.body;
-    if(req.file){
-        data.image = req.file.filename;
     }
-        // db query
-        MongoClient.connect(dbURL, (err, client) => {
-            if (err) {
-                next({status: 500, msg: "Error connection"})
+    register = (req, res, next) => {
+
+        //if single file upload, req.file
+        //multiple file upload, req.files
+
+        let data = req.body;
+        if (req.file) {
+            data.image = req.file.filename;
+        }
+
+        try{
+            let use = getRecord('users', {email: data.email});
+            if(user && user.length) {
+                next({ status: 400, msg: "Email already taken"})
             } else {
-                const db = client.db(dbname);
-                
-                db.collection('users').insertOne(data)
-                .then((ack) => {
+                addRecord('users', data)
+                .then((response) => {
                     res.json({
-                        result: data,
+                        result: response,
                         status: true,
-                        msg: "User registered successfully."
+                        msg: "User registered successfully"
                     })
-
                 })
-                .catch((err) => {
-                    console.error(err);
-                    next({
-                        status: 500,
-                        msg: "Error while regestering user"
-                    })
+                .catch((error) => {
+                    next(error);
                 })
             }
-        });
-       
+        }
+        catch(error) {
+            next(error);
+        }
+        
     }
+    getUserById = async(req, res, next) => {
+        // MongoClient.connect(dbUrl, (err, client) => {
+        //     if(err) {
+        //         next(err);
+        //     } else {
+        //         let db = client.db('Backend_practice');
+        //         db.collection('users').find({_id: ObjectId(req.params.id) })
+        //         .toArray()
+        //         .then((user) => {
+        //             //user
+        //         })
+        //     }
+        // })
+    }
+
 }
 
 module.exports = AuthController;
