@@ -1,17 +1,8 @@
 const express = require("express");
 const app = express();
-
+require('./config/mpngo.config');
 const routes = require("./routes");
 
-//Middleware
-/*
-a. Application Level middleware
-b. Routing Level Middleware
-c. Custom Middleware
-d. Builtin Middleware
-e. Error Handeling Middleware
-f. Thirdparty Middleware
-*/ 
 
 app.use('/assets', express.static(process.cwd()+"/uploads"));
 app.set('view engine', 'pug');
@@ -25,18 +16,10 @@ app.use(express.urlencoded({
     extended: false
 }));
 
-app.get("/", (req, res, next) => {
-    let name= "Kramik";
-    res.render('index', {name: name});
-})
-
 app.use("/api/v1", routes);
 
 let router = express.Router();
 
-router.get("/contact", (req, res, next) => {
-
-})
 
 app.use(router);
 
