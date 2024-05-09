@@ -1,4 +1,5 @@
-const { updateRecord, deleteRecord } = require("../services/mongodb.service");
+const { response } = require("express");
+const { updateRecord, deleteRecord, getRecord } = require("../services/mongodb.service");
 const mongodb = require("mongodb");
 const ObjectId = mongodb.ObjectId;
 
@@ -25,6 +26,7 @@ class UserController{
         }) 
         .catch(error => next(error));
     }
+
     delete = (req, res, next) => {
         deleteRecord('users', {_id: ObjectId(req.params.id)})
         .then((success) => {
@@ -36,6 +38,7 @@ class UserController{
         })
         .catch(error => next(error));
     }
+
     show = (req, res, next) => {
         //logic
         res.json({
@@ -43,6 +46,20 @@ class UserController{
             status: true,
             msg: "User data"
         });
+    }
+
+    listAll = (req, res, next) => {
+        getRecord('users')
+        .then((response) => {
+            res.json({
+                result: response,
+                status: true,
+                msg: "fetched"
+            })
+        })
+        .catch((error) => {
+            next({stauts: 500, msg: error})
+        })
     }
 }
 
