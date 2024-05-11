@@ -1,35 +1,22 @@
 const mongoose = require("mongoose");
+const {titleSchema, statusSchema, indexSchema }= require("./title.schema");
+
 
 const LabelSchemaDef = new mongoose.Schema({
-    title: {
-        type: String,
-    },
+   ...titleSchema,
     link: {
         type: String,
-    },
-    slug: {
-        type: String,
-        unique: true
     },
     image: {
         type: String,
         required: true,
     },
-    status: {
-        type: String,
-        enum: ["active", "inactive"],
-        default: "inactive"
-    },
+    ...statusSchema,
     type: {
         type: String,
         enum: ["brand", "banner"]
     } 
-}, {
-
-    timestamps: true,
-    autoCreate: true,
-    autoIndex: true
-});
+},indexSchema );
 
 const LabelModel = mongoose.model("Banner", LabelSchemaDef);
 module.exports = LabelModel;

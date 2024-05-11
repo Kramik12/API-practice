@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
+const {titleSchema, statusSchema, indexSchema }= require("./title.schema");
 
 const CategorySchemaDef = new mongoose.Schema({
-    title: {
-        type: String,
-        unique: true,
-    },
+    ...titleSchema,
     parent_id: {
         type: mongoose.Types.ObjectId,
         ref: "Category",
@@ -20,11 +18,13 @@ const CategorySchemaDef = new mongoose.Schema({
     image: {
         type: String
     },
-    status: {
-        type: String,
-        enum: ["active", "inactive"]
-    }
-});
+    ...statusSchema,
+    brand: [{
+        type: mongoose.Types.ObjectId,
+        ref: "Brand",
+        default: null
+    }]
+}, indexSchema);
 
 const CategoryModel = mongoose.model("Category", CategorySchemaDef);
 module.exports = CategoryModel;

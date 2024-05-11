@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { indexSchema, statusSchema } = require("./title.schema");
 const LocationSchema = new mongoose.Schema({
     location: String
 });
@@ -31,20 +32,8 @@ const UserSchemaDef = new mongoose.Schema({
     date_of_birth: {
         type: Date
     },
-    status: {
-        type: String,
-        enum: ["active", "inactive"],
-        default: 'inactive'
-    }
-    // role_id: {
-    //     type: mongoose.Types.ObjectId,
-    //     ref: "Role"
-    // }
-}, {
-    timestamps: true,
-    autoIndex: true,
-    autoCreate: true
-});
+    ...statusSchema
+}, indexSchema);
 
 const User = mongoose.model("User", UserSchemaDef);
 module.exports = User;
