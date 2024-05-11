@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const BannerSchemaDef = new mongoose.Schema({
+const LabelSchemaDef = new mongoose.Schema({
     title: {
         type: String,
     },
@@ -15,6 +15,10 @@ const BannerSchemaDef = new mongoose.Schema({
         type: String,
         enum: ["active", "inactive"],
         default: "inactive"
+    },
+    type: {
+        type: String,
+        enum: ["brand", "banner"]
     } 
 }, {
 
@@ -23,5 +27,5 @@ const BannerSchemaDef = new mongoose.Schema({
     autoIndex: true
 });
 
-const BannerModel = mongoose.model("Banner", BannerSchemaDef);
-module.exports = BannerModel;
+const LabelModel = mongoose.model("Banner", LabelSchemaDef);
+module.exports = LabelModel;
