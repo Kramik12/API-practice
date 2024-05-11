@@ -7,6 +7,10 @@ const LabelSchemaDef = new mongoose.Schema({
     link: {
         type: String,
     },
+    slug: {
+        type: String,
+        unique: true
+    },
     image: {
         type: String,
         required: true,
