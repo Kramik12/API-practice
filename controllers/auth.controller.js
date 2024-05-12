@@ -3,20 +3,28 @@ const { response } = require("express");
 const { addRecord, getRecord } = require("../services/mongodb.service");
 const { MongoClient, ObjectId } = require("mongodb");
 
+const bcrypt = require("bcrypt");
 class AuthController {
     login = (req, res, next) => {
         let data = req.body;
         try {
-            let result = getRecord('users', {
-                email: data.email,
-                password: data.password
+            let result = User.findOne({
+                email: data.email
             });
-            if (result && result.length) {
-                res.json({
-                    result: result,
-                    status: true,
-                    msg: "You are successfully logged in"
-                })
+
+            console.log(result);
+
+            if (result) {
+                //password check
+                if(bcrypt.compareSync(data.password, result.password)){
+                    res.json({
+                        result: result,
+                        statis: true,
+                        msg: "You are successfully logged in"
+                    })
+                } else{
+                    next({status: 400, msg: "Password does not match"})
+                }
             } else {
                 res.json({
                     result: null,
@@ -44,6 +52,8 @@ class AuthController {
             if(user && user.length) {
                 next({ status: 400, msg: "Email already taken"})
             } else {
+                data['password'] = bcrypt.hashSync(data['password'], 10);
+
                 addRecord('users', data)
                 .then((response) => {
                     res.json({
