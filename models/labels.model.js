@@ -15,6 +15,10 @@ const LabelSchemaDef = new mongoose.Schema({
     type: {
         type: String,
         enum: ["brand", "banner"]
+    },
+    created_by: {
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     } 
 },indexSchema );
 

@@ -7,7 +7,7 @@ const IsLoggedIn = require("../middleware/logincheck.middleware");
 
 router.route('/')
 .get(brandList)
-.post(IsLoggedIn, uploader.array('image'), brandAdd)
+.post(IsLoggedIn, uploader.single('image'), brandAdd)
 
 router.route('/:id')
 .get((req, res, next) => {})

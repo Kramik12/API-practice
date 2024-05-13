@@ -1,29 +1,22 @@
-const svc = require("../services/brand.service");
+const LabelService = require("../services/label.service");
+const { successResponse, errorResponse } = require("../utilities/helpers");
+const svc = new LabelService();
 
 const brandAdd = async (req, res, next) => {
     try {
         let data = req.body;
         if (req.files) {
-            let images = [];
-            req.files.map((o, i) => {
-                images.push(o.filename);
-            })
-            data.images = images;
+            data.image = req.file.filename;
         }
+
+        data.type = "brand";
 
         let success = await svc.addBrand(data)
         if(success) {
-            res.json({
-                result: data,
-                msg: "Brand created successfully",
-                status: true
-            })
+            res.json(successResponse(data, "Brand Created Successfully."))
+            
         } else {
-            res.json({
-                result: data,
-                msg: "Error while adding brand",
-                status: false
-            })
+            res.json(errorResponse("Error while creating brand."))
         }
 
     } catch(error) {

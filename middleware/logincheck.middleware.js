@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken"); 
 const CONSTANTS = require("../config/constants");
+const User = require("../models/user.model");
 const IsLoggedIn = (req, res, next) => {
     let token = '';
     if(req.headers['authorization']){
@@ -30,6 +31,7 @@ const IsLoggedIn = (req, res, next) => {
             User.findById(data.id)
             .then((user) => {
                 if(user){
+                    req.auth_user = user;
                     next();
                 } else {
                     next({
