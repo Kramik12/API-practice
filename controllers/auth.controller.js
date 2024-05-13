@@ -8,10 +8,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const CONSTANTS = require("../config/constants");
 class AuthController {
-    login = (req, res, next) => {
+    login = async (req, res, next) => {
         let data = req.body;
         try {
-            let result = User.findOne({
+            let result = await User.findOne({
                 email: data.email
             });
 
