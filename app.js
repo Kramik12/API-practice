@@ -43,7 +43,20 @@ app.use((req, res, next) => {
     });
 });
 
-app.listen(3001, "localhost", (err) => {
+app.use((err, req, res, next) => {
+    let status_code = err?.status || 500;
+    let msg = err?.msg || "Error";
+
+    res.status(status_code).json({
+        result: null,
+        status: false,
+        msg: msg 
+    })
+})
+
+app.set("PORT", 3001)
+
+app.listen(app.get('PORT'), "localhost", (err) => {
     if(err){
         console.log("Server connection error");
     } else {

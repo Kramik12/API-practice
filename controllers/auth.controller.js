@@ -2,8 +2,11 @@
 const { response } = require("express");
 const { addRecord, getRecord } = require("../services/mongodb.service");
 const { MongoClient, ObjectId } = require("mongodb");
+const User = require("../models/user.model");
+const jwt = require("jsonwebtoken");
 
 const bcrypt = require("bcrypt");
+const CONSTANTS = require("../config/constants");
 class AuthController {
     login = (req, res, next) => {
         let data = req.body;
@@ -17,9 +20,19 @@ class AuthController {
             if (result) {
                 //password check
                 if(bcrypt.compareSync(data.password, result.password)){
+
+                    let token = this.generateToken({
+                        id: result._id,
+                        name: result.name,
+                        email: result.email,
+                        role: result.role
+                    })
                     res.json({
-                        result: result,
-                        statis: true,
+                        result: {
+                            token: token,
+                            user: result
+                        },
+                        status: true,
                         msg: "You are successfully logged in"
                     })
                 } else{
@@ -37,7 +50,7 @@ class AuthController {
         }
 
     }
-    register = (req, res, next) => {
+    register = async (req, res, next) => {
 
         //if single file upload, req.file
         //multiple file upload, req.files
@@ -48,13 +61,19 @@ class AuthController {
         }
 
         try{
-            let use = getRecord('users', {email: data.email});
-            if(user && user.length) {
+            //let use = getRecord('users', {email: data.email});
+
+            let user = await User.findOne({
+                email: data.email
+            })
+            if(user) {
                 next({ status: 400, msg: "Email already taken"})
             } else {
                 data['password'] = bcrypt.hashSync(data['password'], 10);
 
-                addRecord('users', data)
+                //addRecord('users', data)
+                let user = new User(data);
+                user.save()
                 .then((response) => {
                     res.json({
                         result: response,
@@ -87,6 +106,10 @@ class AuthController {
         // })
     }
 
+    generateToken = (data) => {
+        let token = jwt.sign(data, CONSTANTS.JWT_SECRET);
+        return token;
+    }
 }
 
 module.exports = AuthController;
