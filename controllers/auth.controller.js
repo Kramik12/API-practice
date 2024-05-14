@@ -27,6 +27,9 @@ class AuthController {
                         email: result.email,
                         role: result.role
                     })
+
+                    myEvents.emit("hello");
+                    
                     res.json({
                         result: {
                             token: token,

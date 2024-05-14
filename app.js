@@ -2,7 +2,9 @@ const express = require("express");
 const app = express();
 require('./config/mpngo.config');
 const routes = require("./routes");
+const events = require("./events/index");
 
+app.use(events);
 
 app.use('/assets', express.static(process.cwd()+"/uploads"));
 app.set('view engine', 'pug');
